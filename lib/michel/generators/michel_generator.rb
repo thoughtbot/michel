@@ -31,8 +31,8 @@ class MichelGenerator < Rails::Generators::Base
   end
 
   def create_scenic_model
-    puts "Creating scenic model available_time_slots"
-    generate "scenic:model", "available_time_slots", "--materialized"
+    puts "Creating scenic model available_time_slot"
+    generate "scenic:model", "available_time_slot", "--materialized"
   end
 
   def create_sql_file
