@@ -5,5 +5,12 @@ require "michel/generators/michel_generator"
 
 module Michel
   class Error < StandardError; end
-  # Your code goes here...
+
+  mattr_accessor :resource_class_name
+
+  @@resource_class_name = "Resource"
+
+  def self.setup
+    yield self
+  end
 end
