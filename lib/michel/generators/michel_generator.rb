@@ -3,10 +3,10 @@ require 'rails/generators'
 module Michel
   class MichelGenerator < Rails::Generators::Base
     def add_scenic_gem
-      puts @@resource_class_name
+      puts Michel.resource_class_name
       puts "Adding scenic gem to Gemfile"
       gem "scenic"
-      `bundle install --no-document`
+      Bundler.with_unbundled_env { run "bundle install" }
     end
 
     def create_index_in_migration
