@@ -10,10 +10,6 @@ module Michel
   mattr_accessor :booking_class_name
   mattr_accessor :availability_class_name
 
-  @@resource_class_name = "Banana"
-  @@booking_class_name = "Wheel"
-  @@availability_class_name = "Squirrel"
-
   def self.setup
     yield self
   end
@@ -35,7 +31,7 @@ module Michel
   end
 
   def self.booking_class_table_name
-    @@booking_class_name.titleize.pluralize
+    @@booking_class_name.tableize
   end
 
   def self.booking_class_foreign_id
@@ -51,7 +47,7 @@ module Michel
   end
 
   def self.availability_class_table_name
-    @@availability_class_name.titleize.pluralize
+    @@availability_class_name.tableize
   end
 
   def self.availability_class_foreign_id
