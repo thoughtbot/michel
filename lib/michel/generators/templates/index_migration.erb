@@ -1,0 +1,15 @@
+
+    reversible do |direction|
+      direction.up do
+        execute <<-SQL
+          CREATE EXTENSION btree_gist;
+          CREATE INDEX on <%=Michel.booking_class_table_name%> using gist (<%=Michel.resource_class_foreign_id%>, tsrange(start_time, start_time + interval '1 minute' * duration, '()'));
+        SQL
+      end
+      direction.down do
+        execute <<-SQL
+          DROP INDEX <%=Michel.booking_class_table_name%>_<%=Michel.resource_class_foreign_id%>_tsrange_idx;
+          DROP EXTENSION IF EXISTS btree_gist;
+        SQL
+      end
+    end
