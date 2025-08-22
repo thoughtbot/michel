@@ -1,0 +1,95 @@
+WITH RECURSIVE time_slots AS (
+  -- Generate a series of dates for the next year, starting from tomorrow
+  SELECT
+    p.id AS <%=Michel.availability_class_foreign_id%>,
+    p.<%=Michel.resource_class_foreign_id%>,
+    -- what is DATE_TRUNC?
+    -- DATE_TRUNC('week', CURRENT_DATE) returns the first day of the week
+    (DATE_TRUNC('week', CURRENT_DATE) + (p.weekday - 1 || ' days')::interval) AS start_date,
+    CURRENT_DATE + INTERVAL '6 months' AS end_date,
+    p.start_time,
+    p.end_time,
+    p.timezone
+  FROM
+    availabilities p
+  UNION ALL
+  -- Recursively generate dates for all instances of the given weekday
+  SELECT
+    ts.<%=Michel.availability_class_foreign_id%>,
+    ts.<%=Michel.resource_class_foreign_id%>,
+    ts.start_date + INTERVAL '1 week' AS start_date,  -- Explicitly alias the column
+    ts.end_date,
+    ts.start_time,
+    ts.end_time,
+    ts.timezone
+  FROM
+    time_slots ts
+  WHERE
+    ts.start_date + INTERVAL '1 week' <= ts.end_date
+),
+-- Generate time slots for each day, every 15 minutes
+slot_intervals AS (
+  SELECT
+    ts.<%=Michel.availability_class_foreign_id%>,
+    ts.<%=Michel.resource_class_foreign_id%>,
+    ts.start_date,
+
+    -- Create proper timestamps for start and end times with timezone handling
+    (make_timestamptz(
+      date_part('year', ts.start_date)::integer,
+      date_part('month', ts.start_date)::integer,
+      date_part('day', ts.start_date)::integer,
+      split_part(ts.start_time, ':', 1)::int,
+      split_part(ts.start_time, ':', 2)::int,
+      0,
+      ts.timezone
+    )) AT TIME ZONE 'UTC' AS slot_start_time,
+
+    (make_timestamptz(
+      date_part('year', ts.start_date)::integer,
+      date_part('month', ts.start_date)::integer,
+      date_part('day', ts.start_date)::integer,
+      split_part(ts.end_time, ':', 1)::int,
+      split_part(ts.end_time, ':', 2)::int,
+      0,
+      ts.timezone
+    )) AT TIME ZONE 'UTC' AS slot_end_time
+  FROM
+    time_slots ts
+),
+time_slots_every_15_min AS (
+  SELECT
+    si.<%=Michel.availability_class_foreign_id%>,
+    si.<%=Michel.resource_class_foreign_id%>,
+    si.start_date,
+
+    -- Generate the series for time slots every 15 minutes
+    generate_series(
+      GREATEST(si.slot_start_time, CURRENT_DATE + INTERVAL '1 day'),
+      -- Ensure it starts from tomorrow
+      si.slot_end_time - INTERVAL '30 minutes',
+      INTERVAL '15 minutes'
+    ) AS slot_start_time
+  FROM
+    slot_intervals si
+)
+SELECT
+  concat(<%=Michel.availability_class_foreign_id%>, slot_start_time) AS id,
+  <%=Michel.availability_class_foreign_id%>,
+  <%=Michel.resource_class_foreign_id%>,
+  slot_start_time as start_time,
+  slot_start_time + INTERVAL '30 minutes' AS end_time
+FROM
+  time_slots_every_15_min
+EXCEPT
+            SELECT
+              concat(<%=Michel.availability_class_foreign_id%>, slot_start_time) AS id,
+              time_slots_every_15_min.<%=Michel.availability_class_foreign_id%>,
+              time_slots_every_15_min.<%=Michel.resource_class_foreign_id%>,
+              time_slots_every_15_min.slot_start_time as start_time,
+              time_slots_every_15_min.slot_start_time + INTERVAL '30 minutes' AS end_time
+            FROM       time_slots_every_15_min
+            CROSS JOIN <%=Michel.booking_class_table_name%>
+            WHERE      tsrange(<%=Michel.booking_class_table_name%>.start_time, <%=Michel.booking_class_table_name%>.start_time + interval '1 minute' * <%=Michel.booking_class_table_name%>.duration, '()')
+                      && tsrange(time_slots_every_15_min.slot_start_time, time_slots_every_15_min.slot_start_time + INTERVAL '30 minutes', '()')
+            AND <%=Michel.booking_class_table_name%>.<%=Michel.resource_class_foreign_id%> = time_slots_every_15_min.<%=Michel.resource_class_foreign_id%>
