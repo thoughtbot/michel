@@ -11,7 +11,7 @@ WITH RECURSIVE time_slots AS (
     p.end_time,
     p.timezone
   FROM
-    availabilities p
+    <%=Michel.availability_class_table_name%> p
   UNION ALL
   -- Recursively generate dates for all instances of the given weekday
   SELECT

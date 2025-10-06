@@ -1,6 +1,8 @@
-# frozen_string_literal: true
+require "zeitwerk"
 
+Zeitwerk::Loader.for_gem.setup
 require_relative "michel/version"
+
 require "michel/generators/michel_generator"
 
 module Michel
@@ -15,7 +17,7 @@ module Michel
   end
 
   def self.resource_class_symbol
-    @@resource_class_name.downcase.to_sym
+    @@resource_class_name.underscore.to_sym
   end
 
   def self.resource_class_foreign_id
@@ -27,7 +29,7 @@ module Michel
   end
 
   def self.booking_class_symbol
-    @@booking_class_name.downcase.to_sym
+    @@booking_class_name.underscore.to_sym
   end
 
   def self.booking_class_table_name
@@ -43,7 +45,7 @@ module Michel
   end
 
   def self.availability_class_symbol
-    @@availability_class_name.downcase.to_sym
+    @@availability_class_name.underscore.to_sym
   end
 
   def self.availability_class_table_name
