@@ -84,6 +84,7 @@ jobs:
         run: |
           bundle install
           bin/rails db:setup
+          bin/rails db:test:prepare
 
       - name: Run Tests
         env:
@@ -93,7 +94,5 @@ jobs:
           PGPASSWORD: postgres
           RAILS_ENV: test
           SNOWPLOW_COLLECTOR_DOMAIN: localhost:9090
-        working-directory: ./spec/example-app
         run: |
-          bin/rails db:test:prepare
           bundle exec rake spec
