@@ -8,4 +8,5 @@ gemspec
 gem "rake", "~> 13.0"
 gem "standardrb"
 
-gem "rails", "= 8.0"
+gem "rails", "= 8.0.2.1"
+gem "bundler-audit", ">= 0.7.0", require: false
