@@ -82,6 +82,7 @@ jobs:
           RAILS_ENV: test
         working-directory: ./spec/example-app
         run: |
+          bundle install
           bin/rails db:setup
 
       - name: Run Tests
