@@ -1,27 +1,97 @@
-name: Ruby
+name: Verify
 
-on:
-  push:
-    branches:
-      - main
-
-  pull_request:
+on: [pull_request, workflow_call]
 
 jobs:
-  build:
+  checks:
+    name: Checks
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
-    strategy:
-      matrix:
-        ruby:
-          - '3.3.5'
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby and install gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Run the default task
-        run: bundle exec rake
+
+      - name: Run Security Checks
+        run: bundle exec bundle-audit check --update
+
+      - name: Print Versions
+        run: |
+          psql --version
+          pg_dump --version
+
+      - name: Run Linter Checks
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: |
+          bin/rails db:setup
+          bundle exec rake standard
+          bundle exec rake factory_bot:lint
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby and install gems
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Set up App
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          RAILS_ENV: test
+        run: |
+          cp .sample.env .env
+          bin/rails db:setup
+
+      - name: Run Tests
+        env:
+          APPLICATION_HOST: test
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          RAILS_ENV: test
+          SNOWPLOW_COLLECTOR_DOMAIN: localhost:9090
+        run: |
+          bin/rails db:test:prepare
+          bundle exec rake spec
