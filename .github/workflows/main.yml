@@ -94,5 +94,6 @@ jobs:
           PGPASSWORD: postgres
           RAILS_ENV: test
           SNOWPLOW_COLLECTOR_DOMAIN: localhost:9090
+        working-directory: ./
         run: |
           bundle exec rake spec
