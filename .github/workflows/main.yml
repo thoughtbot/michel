@@ -82,7 +82,6 @@ jobs:
           RAILS_ENV: test
         working-directory: ./spec/example-app
         run: |
-          cp .sample.env .env
           bin/rails db:setup
 
       - name: Run Tests
