@@ -1,6 +1,7 @@
 require "zeitwerk"
 
-Zeitwerk::Loader.for_gem.setup
+loader = Zeitwerk::Loader.for_gem.setup
+loader.enable_reloading
 
 module Michel
   class Error < StandardError; end
