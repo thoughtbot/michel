@@ -1,9 +1,6 @@
 require "zeitwerk"
 
 Zeitwerk::Loader.for_gem.setup
-require_relative "michel/version"
-
-require "michel/generators/michel_generator"
 
 module Michel
   class Error < StandardError; end
