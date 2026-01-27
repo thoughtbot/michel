@@ -38,7 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "scenic", "~>1.9"
   spec.add_development_dependency "database_cleaner"
   spec.add_development_dependency "rspec"
-  spec.add_development_dependency "ammeter"
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 end
