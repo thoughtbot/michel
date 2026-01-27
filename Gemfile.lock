@@ -315,7 +315,8 @@ DEPENDENCIES
   bundler-audit (>= 0.7.0)
   database_cleaner
   michel!
-  rails (= 8.0.2.1)
+  pg (~> 1.1)
+  rails (~> 8.0.2, >= 8.0.2.1)
   rake (~> 13.0)
   rspec
   standardrb
