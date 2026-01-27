@@ -5,8 +5,8 @@ require_relative "lib/michel/version"
 Gem::Specification.new do |spec|
   spec.name = "michel"
   spec.version = Michel::VERSION
-  spec.authors = ["Aji Slater"]
-  spec.email = ["aji.slater@gmail.com"]
+  spec.authors = ["Sally Hall", "Aji Slater"]
+  spec.email = ["sally@thoughtbot.com", "aji.slater@gmail.com"]
 
   spec.summary = "This is the summary"
   spec.description = "Write a longer description or delete this line."
@@ -36,8 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activerecord", ">= 7.0.0"
   spec.add_dependency "pg", "~> 1.0"
   spec.add_dependency "scenic", "~>1.9"
-  spec.add_development_dependency "database_cleaner"
-  spec.add_development_dependency "rspec"
+
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
 end

@@ -223,10 +223,6 @@ GEM
     regexp_parser (2.11.2)
     reline (0.6.3)
       io-console (~> 0.5)
-    rspec (3.13.1)
-      rspec-core (~> 3.13.0)
-      rspec-expectations (~> 3.13.0)
-      rspec-mocks (~> 3.13.0)
     rspec-core (3.13.5)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -318,7 +314,6 @@ DEPENDENCIES
   pg (~> 1.1)
   rails (~> 8.0.2, >= 8.0.2.1)
   rake (~> 13.0)
-  rspec
   standardrb
 
 BUNDLED WITH
