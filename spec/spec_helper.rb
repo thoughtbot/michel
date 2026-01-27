@@ -2,7 +2,6 @@
 
 Dir.glob("#{__dir__}/support/**/*.rb").each { |f| require f }
 require File.expand_path("../../spec/example-app/config/environment", __FILE__)
-require "michel"
 require "scenic"
 require "ammeter/init"
 
