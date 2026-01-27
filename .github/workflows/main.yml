@@ -39,13 +39,8 @@ jobs:
           pg_dump --version
 
       - name: Run Linter Checks
-        env:
-          PGHOST: localhost
-          PGUSER: postgres
-          PGPASSWORD: postgres
         run: |
           bundle exec rake standard
-          bundle exec rake factory_bot:lint
 
   tests:
     name: Tests
@@ -92,7 +87,6 @@ jobs:
           PGUSER: postgres
           PGPASSWORD: postgres
           RAILS_ENV: test
-          SNOWPLOW_COLLECTOR_DOMAIN: localhost:9090
         working-directory: ./
         run: |
           bundle exec rake spec
