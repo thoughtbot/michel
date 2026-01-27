@@ -44,7 +44,6 @@ jobs:
           PGUSER: postgres
           PGPASSWORD: postgres
         run: |
-          bin/rails db:setup
           bundle exec rake standard
           bundle exec rake factory_bot:lint
 
