@@ -4,7 +4,6 @@ Dir.glob("#{__dir__}/support/**/*.rb").each { |f| require f }
 require File.expand_path("../../spec/example-app/config/environment", __FILE__)
 require "michel"
 require "scenic"
-require "ammeter/init"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
