@@ -1,7 +1,8 @@
 require "zeitwerk"
 
-Zeitwerk::Loader.for_gem.setup
-
+loader = Zeitwerk::Loader.for_gem
+loader.ignore("#{__dir__}/generators")
+loader.setup
 module Michel
   class Error < StandardError; end
 
