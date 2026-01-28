@@ -32,7 +32,7 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
       timezone: "UTC"
     )
 
-    Scenic.database.refresh_materialized_view("available_time_slots", concurrently: false)
+    AvailableTimeSlot.refresh
     slots = AvailableTimeSlot.all
 
     expect(slots).not_to be_empty
@@ -56,7 +56,7 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
       duration: 30
     )
 
-    Scenic.database.refresh_materialized_view("available_time_slots", concurrently: false)
+    AvailableTimeSlot.refresh
 
     # Now the 9:00 slot should not be available
     slot_times = AvailableTimeSlot.pluck(:start_time)
