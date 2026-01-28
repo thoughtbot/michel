@@ -22,6 +22,11 @@ module Michel
         puts "Creating scenic model available_time_slot"
 
         invoke "scenic:model", ["available_time_slot"], {"materialized" => true, "test_framework" => false}
+
+        Dir.glob(Rails.root.join("db/migrate/*create_available_time_slots.rb")).each do |file|
+          gsub_file file, /change/, "up"
+          inject_into_class file, "CreateAvailableTimeSlots", template_content("view_migration.rb")
+        end
       end
 
       def create_sql_file
