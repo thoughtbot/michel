@@ -14,6 +14,7 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
 
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).migrate
     Rails.autoloaders.main.reload
+    load Rails.root.join('app/models/available_time_slot.rb')
   end
 
   after(:all) do
