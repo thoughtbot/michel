@@ -7,7 +7,7 @@ Find available time slots quickly with a materialized view.
 ### Install Michel
    `gem michel`
    `rails generate michel:install`
-   TODO:  Still need to create this generator
+
 
 ### Configure
   Michel needs three existing classes to function:
@@ -24,6 +24,8 @@ Find available time slots quickly with a materialized view.
     * `end_time` -  a string representing the end time of the availability in the configured timezone in 24-hour format, ex: '017:00'
     * a reference to the id of the resource class
   There should be one availability record for each continuous block of available time during a week. For example, if a resource is available from 9-5, M-Th, with a 1 hour break from 12-1, that is represented by eight availabilities: one for each day from 9-12 and another for each day from 1-5.
+
+  Configure the class names in `config/initializers/michel.rb`
 
 ### Run generator
   To generate the database view and necessary supporting code, run `rails generate michel:view`. This will:

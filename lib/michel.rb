@@ -1,4 +1,5 @@
 require "zeitwerk"
+require "michel/railtie" if defined?(Rails)
 
 loader = Zeitwerk::Loader.for_gem
 loader.ignore("#{__dir__}/generators")
