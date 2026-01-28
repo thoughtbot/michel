@@ -12,6 +12,7 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
     run_generator
     # Scenic.load
     puts "RUNNING THE BEFORE BLOCK ***************"
+    puts `ls spec/example-app/app/models`
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).migrate
     Rails.autoloaders.main.reload
     load Rails.root.join("app/models/available_time_slot.rb")
