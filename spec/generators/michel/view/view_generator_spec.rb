@@ -11,10 +11,10 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
 
     run_generator
     # Scenic.load
-puts "RUNNING THE BEFORE BLOCK ***************"
+    puts "RUNNING THE BEFORE BLOCK ***************"
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).migrate
     Rails.autoloaders.main.reload
-    load Rails.root.join('app/models/available_time_slot.rb')
+    load Rails.root.join("app/models/available_time_slot.rb")
   end
 
   after(:all) do
