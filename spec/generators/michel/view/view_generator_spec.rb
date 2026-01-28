@@ -1,5 +1,7 @@
 require "spec_helper"
-RSpec.describe "Michel materialized view", type: :generator do
+require "generators/michel/view/view_generator"
+
+RSpec.describe Michel::Generators::ViewGenerator, :generator do
   before(:all) do
     Michel.setup do |config|
       config.resource_class_name = "Physician"
@@ -7,7 +9,7 @@ RSpec.describe "Michel materialized view", type: :generator do
       config.availability_class_name = "PhysicianAvailability"
     end
 
-    Rails::Generators.invoke("michel:view")
+    run_generator
     Scenic.load
 
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).migrate
@@ -16,7 +18,7 @@ RSpec.describe "Michel materialized view", type: :generator do
 
   after(:all) do
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(2)
-    Rails::Generators.invoke("michel:view", [], behavior: :revoke)
+    run_generator [], behavior: :revoke
   end
 
   it "generates available time slots" do
