@@ -4,7 +4,7 @@
 
 Include an RC (release candidate) number if appropriate, e.g. 2.0.0.rc.
 
-## 2. Update `NEWS.md` or `CHANGELOG.md` to reflect the changes since last release
+## 2. Update `CHANGELOG.md` to reflect the changes since last release
 
 You can copy [GitHub automatically generated release notes] for this step.
 
@@ -30,7 +30,7 @@ gem push project-name-*.gem
 If the project is hosted on RubyGems, consider using [RubyGems Trusted Publication] to automatically
 push the release using a GitHub action.
 
-## 7. Add a new GitHub release using the recent `NEWS.md` or `CHANGELOG.md` as the content
+## 7. Add a new GitHub release using the recent `CHANGELOG.md` as the content
 
 Sample URL: https://github.com/thoughtbot/project-name/releases/new?tag=vVERSION
 

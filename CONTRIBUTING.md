@@ -12,20 +12,21 @@ issue trackers, chatrooms, and mailing lists.
 
 ## Contributing Code
 
-$(INSTALL_DEPENDENCIES)
 
 Fork the repo.
 
+  `bundle install`
+
 Make sure the tests pass:
 
-    $(TEST_RUNNER)
+  `bundle exec rspec`
 
 Make your change, with new passing tests. Follow the [style guide][style].
 
   [style]: https://github.com/thoughtbot/guides/tree/master/style
 
 Mention how your changes affect the project to other developers and users in the
-`NEWS.md` file.
+`CHANGELOG.md` file.
 
 Push to your fork. Write a [good commit message][commit]. Submit a pull request.
 
