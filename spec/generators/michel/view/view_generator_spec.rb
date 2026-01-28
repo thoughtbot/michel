@@ -1,14 +1,14 @@
 require "spec_helper"
-RSpec.describe "Michel materialized view", type: :generator do
+require "generators/michel/view/view_generator"
+
+RSpec.describe Michel::Generators::ViewGenerator, :generator do
   before(:all) do
     Michel.setup do |config|
       config.resource_class_name = "Physician"
       config.booking_class_name = "Appointment"
       config.availability_class_name = "PhysicianAvailability"
     end
-
-    Rails::Generators.invoke("michel")
-    Scenic.load
+    Rails::Generators.invoke("michel:view")
 
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).migrate
     Rails.autoloaders.main.reload
@@ -16,7 +16,7 @@ RSpec.describe "Michel materialized view", type: :generator do
 
   after(:all) do
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(2)
-    Rails::Generators.invoke("michel", [], behavior: :revoke)
+    Rails::Generators.invoke("michel:view", [], behavior: :revoke)
   end
 
   it "generates available time slots" do
@@ -30,9 +30,9 @@ RSpec.describe "Michel materialized view", type: :generator do
       timezone: "UTC"
     )
 
-    Scenic.database.refresh_materialized_view("available_time_slots", concurrently: false)
-
+    AvailableTimeSlot.refresh
     slots = AvailableTimeSlot.all
+
     expect(slots).not_to be_empty
     expect(slots.first.start_time.hour).to eq(9)
   end
@@ -54,7 +54,7 @@ RSpec.describe "Michel materialized view", type: :generator do
       duration: 30
     )
 
-    Scenic.database.refresh_materialized_view("available_time_slots", concurrently: false)
+    AvailableTimeSlot.refresh
 
     # Now the 9:00 slot should not be available
     slot_times = AvailableTimeSlot.pluck(:start_time)

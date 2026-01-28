@@ -1,39 +1,76 @@
 # Michel
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/michel`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-## Installation
-
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
+Find available time slots quickly with a materialized view.
 
 ## Usage
 
-TODO: Write usage instructions here
+### Install Michel
+  In order to run the migrations, you must also install Scenic. Add to your gemfile:
 
-## Development
+  ```
+  gem "michel"
+  gem "scenic"
+  ```
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+  Run `bundle install`, then  `rails generate michel:install`
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+### Configure
+  Configure the class names in `config/initializers/michel.rb`
+
+  Michel expects three classes to exist in the application:
+  * Resource Class
+    * The resource that is occupied by a booking, ex: Physician, Room, Instructor.
+    * This resource is assumed to be available for only one booking at a time. A resource has many bookings and many availabilities.
+
+  * Booking Class
+    * The event that is scheduled for a resource, ex: Appointment.
+    * The resource is unavailable for the duration of the booking.
+    * It is required to have the following attributes:
+      * `start_time` - a DateTime indicating the start time of the booking.
+      * `duration` - an integer representing the number of minutes the booking lasts.
+      * a reference to the id of the resource class
+    * The booking class is also used to block off unavailable times. It is recommended that you have a booking type to distinguish between appointments and other events.
+  * Availability Class
+    * The weekly schedule during which a resource is available for a booking
+    * It is required to have the following attributes:
+      * `timezone` - a string representing the time zone in which the availability is configured, ex: 'UTC'
+      * `weekday` - an integer representing the weekday, starting with Monday = 1
+      * `start_time` -  a string representing the beginning time of the availability in the configured timezone in 24-hour format, ex: '09:00'
+      * `end_time` -  a string representing the end time of the availability in the configured timezone in 24-hour format, ex: '017:00'
+      * a reference to the id of the resource class
+    * There should be one availability record for each continuous block of available time during a week. For example, if a resource is available from 9-5, M-Th, with a 1 hour break from 12-1, that is represented by eight availabilities: one for each day from 9-12 and another for each day from 1-5.
+
+
+### Run the generator
+  To generate the database view and necessary supporting code, run `rails generate michel:view`. This will:
+
+  1. Generate a migration to add an index to the booking class table on the resource id and start_time.
+  2. Generate a Scenic model for available time slots.
+  3. Generate a sql file with the view to back the scenic model.
+  4. Insert associations between the existing classes and the generated `AvailableTimeSlot` class.
+
+  Once the generator is finished, run `rails db:migrate` to run the generated migrations.
+
+### Start Scheduling.
+  To find available time slots, search for matching `AvailableTimeSlots`. Each slot has a `start_time` and an `end_time` and belongs to an `availability` and a `resource`.
+
+  To refresh the materialized view, run `AvailableTimeSlot.refresh`. The view should be refreshed when a booking is created, updated, or deleted, or when availability changes.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/michel. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/michel/blob/main/CODE_OF_CONDUCT.md).
+See the [CONTRIBUTING] document.
+Thank you, [contributors]!
 
-## Code of Conduct
+[CONTRIBUTING]: CONTRIBUTING.md
+[contributors]: https://github.com/thoughtbot/michel/graphs/contributors
 
-Everyone interacting in the Michel project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/michel/blob/main/CODE_OF_CONDUCT.md).
+## License
+
+Michel is Copyright (c) thoughtbot, inc.
+It is free software, and may be redistributed
+under the terms specified in the [LICENSE] file.
+
+[LICENSE]: /LICENSE
+
+<!-- START /templates/footer.md -->
+<!-- END /templates/footer.md -->

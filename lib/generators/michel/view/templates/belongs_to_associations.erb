@@ -1,0 +1,6 @@
+  belongs_to :<%=Michel.availability_class_symbol%>
+  belongs_to :<%=Michel.resource_class_symbol%>
+
+  def self.refresh
+    Scenic.database.refresh_materialized_view(table_name, concurrently: false, cascade: false)
+  end

@@ -13,3 +13,5 @@ gem "pg", "~> 1.1"
 gem "bundler-audit", ">= 0.7.0", require: false
 gem "database_cleaner"
 gem "ammeter"
+gem "debug"
+gem "scenic"

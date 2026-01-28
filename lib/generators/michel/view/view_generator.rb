@@ -2,7 +2,7 @@ require "rails/generators"
 require "scenic"
 module Michel
   module Generators
-    class MichelGenerator < Rails::Generators::Base
+    class ViewGenerator < Rails::Generators::Base
       source_root File.expand_path("templates", __dir__)
       include Scenic
 
@@ -21,7 +21,12 @@ module Michel
         self.destination_root = Rails.root
         puts "Creating scenic model available_time_slot"
 
-        invoke "scenic:model", ["available_time_slot"], {"materialized" => true, "test_framework" => false}
+        invoke "scenic:model", ["available_time_slots"], {"materialized" => true, "test_framework" => false}
+
+        Dir.glob(Rails.root.join("db/migrate/*create_available_time_slots.rb")).each do |file|
+          gsub_file file, /change/, "up"
+          inject_into_class file, "CreateAvailableTimeSlots", template_content("view_migration.rb")
+        end
       end
 
       def create_sql_file

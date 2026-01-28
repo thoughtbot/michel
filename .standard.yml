@@ -1,0 +1,5 @@
+ignore:
+  - 'lib/generators/michel/view/templates/view_migration.rb':
+    - Layout/InitialIndentation
+    - Layout/TrailingEmptyLines
+    - Layout/TrailingWhitespace
