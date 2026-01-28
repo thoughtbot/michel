@@ -21,7 +21,7 @@ module Michel
         self.destination_root = Rails.root
         puts "Creating scenic model available_time_slot"
 
-        invoke "scenic:model", ["available_time_slot"], {"materialized" => true, "test_framework" => false}
+        invoke "scenic:model", ["available_time_slots"], {"materialized" => true, "test_framework" => false}
 
         Dir.glob(Rails.root.join("db/migrate/*create_available_time_slots.rb")).each do |file|
           gsub_file file, /change/, "up"

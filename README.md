@@ -5,6 +5,8 @@ Find available time slots quickly with a materialized view.
 ## Usage
 
 ### Install Michel
+    In order to run the migrations, you must also install Scenic
+  `gem scenic`
    `gem michel`
    `rails generate michel:install`
 
