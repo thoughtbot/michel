@@ -8,8 +8,9 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
       config.booking_class_name = "Appointment"
       config.availability_class_name = "PhysicianAvailability"
     end
+    Rails::Generators.invoke("michel:view")
 
-    run_generator
+    # run_generator
     # Scenic.load
     puts "RUNNING THE BEFORE BLOCK ***************"
     puts `ls spec/example-app/app/models`
