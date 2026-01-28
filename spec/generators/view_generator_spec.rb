@@ -7,7 +7,7 @@ RSpec.describe "Michel materialized view", type: :generator do
       config.availability_class_name = "PhysicianAvailability"
     end
 
-    Rails::Generators.invoke("michel")
+    Rails::Generators.invoke("michel:view")
     Scenic.load
 
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).migrate
@@ -16,7 +16,7 @@ RSpec.describe "Michel materialized view", type: :generator do
 
   after(:all) do
     ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(2)
-    Rails::Generators.invoke("michel", [], behavior: :revoke)
+    Rails::Generators.invoke("michel:view", [], behavior: :revoke)
   end
 
   it "generates available time slots" do
@@ -31,8 +31,8 @@ RSpec.describe "Michel materialized view", type: :generator do
     )
 
     Scenic.database.refresh_materialized_view("available_time_slots", concurrently: false)
-
     slots = AvailableTimeSlot.all
+
     expect(slots).not_to be_empty
     expect(slots.first.start_time.hour).to eq(9)
   end

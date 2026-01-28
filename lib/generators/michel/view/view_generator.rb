@@ -2,7 +2,7 @@ require "rails/generators"
 require "scenic"
 module Michel
   module Generators
-    class MichelGenerator < Rails::Generators::Base
+    class ViewGenerator < Rails::Generators::Base
       source_root File.expand_path("templates", __dir__)
       include Scenic
 
