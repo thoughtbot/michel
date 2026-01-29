@@ -1,6 +1,6 @@
 # Michel
 
-Find available time slots quickly with a materialized database view. Inspired by scheduling appointments for health care applications. Named for the worst scheduling assistant on tv, [Michel Gerard of Gilmore Girls.](https://gilmoregirls.fandom.com/wiki/Michel_Gerard)
+A generator for creating a materialized-view-backed model for querying available time slots. Inspired by and tailored for health care applications that need self-scheduling capability for users. Named for the worst scheduling assistant on tv, [Michel Gerard of Gilmore Girls.](https://gilmoregirls.fandom.com/wiki/Michel_Gerard)
 
 
 ## The problem
