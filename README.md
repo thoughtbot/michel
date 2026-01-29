@@ -54,7 +54,7 @@ The materialized view must be refreshed every time a booking or availability is 
 
 All bookings are considered to be blocking. In order to make a time slot available, the booking must be destroyed. In the future, we intend to add a way to configure status values that are non-blocking for things like cancelled appointments where you'd like to keep the record but want the resource to be available.
 
-Available time slots are 30 minutes. This will be configurable in the future. Bookings can be any duration.
+Available time slots each have a 30-minute duration. This will be configurable in the future. Bookings can be any duration.
 
 Availabilities are for only one resource type right now. A doctor who works at two different clinics, for example, will not have a way to distinguish between availabilities at different clinics. In the future, we will add support for a second resource type, so a query for available time slots can be scoped to a second resource, like a clinic location. The current view allows for this scoping only by joining to the availability table and scoping that to the second resource, which is less efficient.
 
