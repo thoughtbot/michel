@@ -6,6 +6,39 @@ module Michel
       source_root File.expand_path("templates", __dir__)
       include Scenic
 
+      def check_resource_class
+        Rails::Generators.invoke("model", [
+          Michel.resource_class_name,
+          "name:string",
+          "--skip"
+        ], destination_root: Rails.root,
+          behavior: behavior)
+      end
+
+      def check_availability_class
+        Rails::Generators.invoke("model", [
+          Michel.availability_class_name,
+          "timezone:string",
+          "weekday:integer",
+          "start_time:string",
+          "end_time:string",
+          "#{Michel.resource_class_underscore}:references",
+          "--skip"
+        ], destination_root: Rails.root,
+          behavior: behavior)
+      end
+
+      def check_booking_class
+        Rails::Generators.invoke("model", [
+          Michel.booking_class_name,
+          "start_time:datetime",
+          "duration:integer",
+          "#{Michel.resource_class_underscore}:references",
+          "--skip"
+        ], destination_root: Rails.root,
+          behavior: behavior)
+      end
+
       def create_index_in_migration
         self.destination_root = Rails.root
 
@@ -35,15 +68,15 @@ module Michel
       end
 
       def add_associations_to_models
-        has_many_associations = template_content("has_many_associations.erb")
-
-        inject_into_class "app/models/#{Michel.availability_class_underscore}.rb", Michel.availability_class_name,
-          has_many_associations
-        inject_into_class "app/models/#{Michel.resource_class_underscore}.rb", Michel.resource_class_name,
-          has_many_associations
-        belongs_to_associations = template_content("belongs_to_associations.erb")
         case behavior
         when :invoke
+          has_many_associations = template_content("has_many_associations.erb")
+
+          inject_into_class "app/models/#{Michel.availability_class_underscore}.rb", Michel.availability_class_name,
+            has_many_associations
+          inject_into_class "app/models/#{Michel.resource_class_underscore}.rb", Michel.resource_class_name,
+            has_many_associations
+          belongs_to_associations = template_content("belongs_to_associations.erb")
           inject_into_class "app/models/available_time_slot.rb", "AvailableTimeSlot", belongs_to_associations
         end
       end
