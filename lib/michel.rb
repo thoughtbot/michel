@@ -30,6 +30,10 @@ module Michel
     @@booking_class_name.underscore.to_sym
   end
 
+  def self.booking_class_symbol_plural
+    @@booking_class_name.pluralize.underscore.to_sym
+  end
+
   def self.booking_class_table_name
     @@booking_class_name.tableize
   end
@@ -44,6 +48,10 @@ module Michel
 
   def self.availability_class_symbol
     @@availability_class_name.underscore.to_sym
+  end
+
+  def self.availability_class_symbol_plural
+    @@availability_class_name.pluralize.underscore.to_sym
   end
 
   def self.availability_class_table_name
