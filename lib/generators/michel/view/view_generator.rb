@@ -70,12 +70,17 @@ module Michel
       def add_associations_to_models
         case behavior
         when :invoke
-          has_many_associations = template_content("has_many_associations.erb")
+          has_many_time_slot_associations = template_content("has_many_time_slot_associations.erb")
 
           inject_into_class "app/models/#{Michel.availability_class_underscore}.rb", Michel.availability_class_name,
-            has_many_associations
+            has_many_time_slot_associations
           inject_into_class "app/models/#{Michel.resource_class_underscore}.rb", Michel.resource_class_name,
-            has_many_associations
+            has_many_time_slot_associations
+
+          resource_has_many_associations = template_content("resource_has_many_associations.erb")
+          inject_into_class "app/models/#{Michel.resource_class_underscore}.rb", Michel.resource_class_name,
+            resource_has_many_associations
+
           belongs_to_associations = template_content("belongs_to_associations.erb")
           inject_into_class "app/models/available_time_slot.rb", "AvailableTimeSlot", belongs_to_associations
         end
