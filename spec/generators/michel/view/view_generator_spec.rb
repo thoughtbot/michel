@@ -19,6 +19,7 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
     after(:all) do
       ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(2)
       Rails::Generators.invoke("michel:view", [], behavior: :revoke)
+      Rails.autoloaders.main.reload
     end
 
     it "generates available time slots" do
@@ -80,6 +81,7 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
     after(:all) do
       ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(5)
       Rails::Generators.invoke("michel:view", [], behavior: :revoke)
+      Rails.autoloaders.main.reload
     end
 
     it "creates resource, booking, and availability classes" do
