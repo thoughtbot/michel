@@ -15,6 +15,9 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+  config.order = :random
+  Kernel.srand config.seed
+
   config.around(:each) do |example|
     ActiveRecord::SchemaMigration
       .new(ActiveRecord::Tasks::DatabaseTasks.migration_connection_pool)
