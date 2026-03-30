@@ -4,7 +4,7 @@ require "generators/michel/view/view_generator"
 RSpec.describe Michel::Generators::ViewGenerator, :generator do
   context "When the resource, booking, and availability classes exist" do
     before(:all) do
-      puts "RUNNING FIRST SETUP"
+      create_physician_models
       Michel.setup do |config|
         config.resource_class_name = "Physician"
         config.booking_class_name = "Appointment"
@@ -17,7 +17,7 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
     end
 
     after(:all) do
-      ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(2)
+      ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(5)
       Rails::Generators.invoke("michel:view", [], behavior: :revoke)
       Rails.autoloaders.main.reload
     end
@@ -131,5 +131,31 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
       slot_times = AvailableTimeSlot.pluck(:start_time)
       expect(slot_times).not_to include(Date.tomorrow.beginning_of_day + 9.hours)
     end
+  end
+
+  def create_physician_models
+    Rails::Generators.invoke("model", [
+      "Physician",
+      "name:string",
+      "--skip"
+    ], destination_root: Rails.root)
+
+    Rails::Generators.invoke("model", [
+      "Appointment",
+      "start_time:datetime",
+      "duration:integer",
+      "physician:references",
+      "--skip"
+    ], destination_root: Rails.root)
+
+    Rails::Generators.invoke("model", [
+      "PhysicianAvailability",
+      "timezone:string",
+      "weekday:integer",
+      "start_time:string",
+      "end_time:string",
+      "physician:references",
+      "--skip"
+    ], destination_root: Rails.root)
   end
 end
