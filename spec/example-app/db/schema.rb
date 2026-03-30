@@ -10,33 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_29_205257) do
+ActiveRecord::Schema[8.0].define(version: 0) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "appointments", force: :cascade do |t|
-    t.bigint "physician_id"
-    t.datetime "start_time", null: false
-    t.integer "duration", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["physician_id"], name: "index_appointments_on_physician_id"
-  end
-
-  create_table "physician_availabilities", force: :cascade do |t|
-    t.bigint "physician_id"
-    t.integer "weekday", null: false
-    t.string "start_time", null: false
-    t.string "end_time", null: false
-    t.string "timezone", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["physician_id"], name: "index_physician_availabilities_on_physician_id"
-  end
-
-  create_table "physicians", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 end
