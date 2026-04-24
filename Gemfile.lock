@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    michel (0.1.0)
+    michel (0.1.2)
       activerecord (>= 7.0.0)
       pg (~> 1.0)
       scenic (~> 1.9)
