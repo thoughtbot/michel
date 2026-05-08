@@ -73,15 +73,10 @@ RSpec.describe Michel::Generators::ViewGenerator, :generator do
         config.availability_class_name = "ProviderAvailability"
       end
       Rails::Generators.invoke("michel:view")
-
-      ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).migrate
-      Rails.autoloaders.main.reload
     end
 
     after(:all) do
-      ActiveRecord::MigrationContext.new(Rails.root.join("db/migrate")).rollback(5)
       Rails::Generators.invoke("michel:view", [], behavior: :revoke)
-      Rails.autoloaders.main.reload
     end
 
     it "creates resource, booking, and availability classes" do
